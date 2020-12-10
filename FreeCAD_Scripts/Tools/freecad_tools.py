@@ -1,8 +1,9 @@
 # -*- Mode: Python; coding: utf-8; indent-tabs-mpythoode: nil; tab-width: 4 -*-
 
-# References
+# References:
 # https://wiki.freecadweb.org/Scripts
 #
+# Test:
 # FreeCAD
 # OS: Debian GNU/Linux 9.13 (stretch)
 # Word size of OS: 32-bit
@@ -45,7 +46,11 @@ except ImportError as err:
     print("Error: " + str(err))
     exit(0)
 
+# Informe inicial
+print("Import ok ...")
 
+
+# Métodos
 def removeAllObjects(document):
 
     if len(document.Objects) < 1:
@@ -59,37 +64,46 @@ def removeAllObjects(document):
     print("Cleaning finished ... ")
 
 
-def cube(document, name, x, y, lengthSide, widthSide, height):
+def cube(document, name, x, y, z, lengthSide, widthSide, height):
+
+    pl = FreeCAD.Placement()
+    pl.Base = FreeCAD.Vector(x, y, z)
 
     obj = document.addObject("Part::Box", name)
     obj.Length = lengthSide
     obj.Width = widthSide
     obj.Height = height
-    # TODO : x, y
+    obj.Placement = pl
     document.recompute()
     print("Cube: " + name)
 
     return obj
 
 
-def cylinder(document, name, x, y, angle, radius, height):
+def cylinder(document, name, x, y, z, angle, radius, height):
+
+    pl = FreeCAD.Placement()
+    pl.Base = FreeCAD.Vector(x, y, z)
 
     obj = document.addObject("Part::Cylinder", name)
     obj.Angle = angle
     obj.Radius = radius
     obj.Height = height
-    # TODO : x, y
+    obj.Placement = pl
     document.recompute()
     print("Cylinder: " + name)
 
     return obj
 
 
-def sphere(document, name, x, y, radius):
+def sphere(document, name, x, y, z, radius):
+
+    pl = FreeCAD.Placement()
+    pl.Base = FreeCAD.Vector(x, y, z)
 
     obj = document.addObject("Part::Sphere", name)
     obj.Radius = radius
-    # TODO : x, y
+    obj.Placement = pl
     document.recompute()
     print("Sphere: " + name)
 
@@ -107,35 +121,27 @@ def fuseTwoObjects(document, name, objectsOne, objectsTwo):
     return obj
 
 
-def createDrawingPage(document, objName, pathTemplate):
+def createDrawingPage(document, pageName, pathTemplate):
 
-    if not document.getObject("Page") is None:
-        document.removeObject("Page")
-    document.addObject("Drawing::FeaturePage","Page")
-    document.Page.Template = pathTemplate
+    if not document.getObject(pageName) is None:
+        document.removeObject(pageName)
 
-    # Experimental
-    document.addObject("Drawing::FeatureViewPart","ViewIso")
-    document.ViewIso.Source = document.getObject(objName)
-    document.ViewIso.Direction = (1.0,1.0,1.0)
-    document.ViewIso.X = 150.0
-    document.ViewIso.Y = 100.0
-    document.ViewIso.Scale = 10
-    #document.ViewIso.ShowHiddenLines = True
-    document.Page.addObject(document.ViewIso)
+    # Criar página de desenho
+    obj = document.addObject("Drawing::FeaturePage", pageName)
+    obj.Template = pathTemplate
     document.recompute()
+    print("Page: " + pageName)
+
+    return obj
 
 
-def saveFreeCAD(documentName, path):
+def saveFreeCAD(document, path):
 
     print("Export fcstd ...")
     try:
-        document = FreeCAD.activeDocument()
-        print("FreeCAD.ActiveDocument: " + document.Name)
-        if document.Name == documentName:
-            output = path + "/" + documentName + ".fcstd"
-            document.saveAs(output)
-            print("Saved: " + output)
+        output = path + "/" + document.Name + ".fcstd"
+        document.saveAs(output)
+        print("Saved: " + output)
     except Exception as err:
         print("Sorry there was something wrong.")
         print("Error: " + str(err))
@@ -147,13 +153,14 @@ def saveViewSVG(document, path):
 
     title = document.Name
     output = path + "/" + title + ".svg"
-    exportSVG(title=title, filePath=output , svg=ViewSVG)
+    exportSVG(title=title, filePath=output, svg=ViewSVG)
 
     separator = 80 * '-'
     print(separator)
     print(ViewSVG)
     print("Saved: " + output)
     print(separator)
+
 
 if __name__ == '__main__':
     # Informe

@@ -11,7 +11,7 @@ def exportSVG(title="CAD", filePath="FreeCAD.svg", svg="<!-- SVG -->"):
         return
 
     print("Export svg ...")
-    
+
     head = '''<?xml version="1.0" standalone="no"?>
     <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
     "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -22,7 +22,7 @@ def exportSVG(title="CAD", filePath="FreeCAD.svg", svg="<!-- SVG -->"):
     head = head.replace("#VBX#", str(VBX))
     head = head.replace("#VBY#", str(VBY))
     head = head.replace("#TITLE#", title)
-    output = head + svg + "\n" + "</svg>" 
+    output = head + svg + "\n" + "</svg>"
 
     try:
         f = open(filePath, "w")
@@ -39,8 +39,8 @@ def exportSVG(title="CAD", filePath="FreeCAD.svg", svg="<!-- SVG -->"):
 
 
 if __name__ == '__main__':
-    
-    # Teste 
+
+    # Teste
     svg = exportSVG()
 
     # Output

@@ -15,7 +15,7 @@ except ImportError as err:
 
 # SIMPLE CUBE DESIGN
 DOC = FreeCAD.activeDocument()
-DOC_NAME = "example_cube"
+DOC_NAME = "example_sphere"
 
 if DOC is None:
     FreeCAD.newDocument(DOC_NAME)
@@ -28,28 +28,14 @@ else:
     print("Clear Doc ...")
 
 # Objeto
-# cube(document, name, x, y, z, lengthSide, widthSide, height)
-obj_cube = cube(DOC, "cube", 5, 5, 0, 10, 10, 5)
-
-# View
-viewIso = DOC.addObject("Drawing::FeatureViewPart", "ViewIso")
-viewIso.Source = DOC.getObject(obj_cube.Name)
-viewIso.Direction = (1.0, 1.0, 1.0)
-viewIso.X = 100.0
-viewIso.Y = 150.0
-viewIso.Scale = 10
-viewIso.ShowHiddenLines = True
-
-# Página de Desenho
-pageViewIso = createDrawingPage(DOC, "Cube_Design", "Templates/A4_Landscape.svg")
-pageViewIso.addObject(viewIso)
-DOC.recompute()
+# sphere(document, name, x, y, z, radius)
+sphere(DOC, "s1", 0, 0, -10, 10)
+sphere(DOC, "s2", 10, 10, 10, 10)
+sphere(DOC, "s3", 20, 20, 0, 10)
+sphere(DOC, "s4", 30, 30, 10, 10)
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
-
-# Salvar SVG
-saveViewSVG(DOC, "Output")
+#saveFreeCAD(DOC, "Output")
 
 # Informe final
 print("Finished!")
