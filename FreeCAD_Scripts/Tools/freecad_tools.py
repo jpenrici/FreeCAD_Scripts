@@ -80,13 +80,13 @@ def cube(document, name, x, y, z, lengthSide, widthSide, height):
     return obj
 
 
-def cylinder(document, name, x, y, z, angle, radius, height):
+def cylinder(document, name, x, y, z, centralAngle, radius, height):
 
     pl = FreeCAD.Placement()
     pl.Base = FreeCAD.Vector(x, y, z)
 
     obj = document.addObject("Part::Cylinder", name)
-    obj.Angle = angle
+    obj.Angle = centralAngle
     obj.Radius = radius
     obj.Height = height
     obj.Placement = pl
@@ -110,15 +110,26 @@ def sphere(document, name, x, y, z, radius):
     return obj
 
 
-def fuseTwoObjects(document, name, objectsOne, objectsTwo):
+def fuse(document, name, objectOne, objectTwo):
 
     obj = document.addObject("Part::Fuse", name)
-    obj.Base = objectsOne
-    obj.Tool = objectsTwo
+    obj.Base = objectOne
+    obj.Tool = objectTwo
     document.recompute()
     print("Fuse: " + name)
 
     return obj
+
+
+def cut(document, name, objectOne, objectTwo):
+
+    obj = document.addObject("Part::Cut", name)
+    obj.Base = objectOne
+    obj.Tool = objectTwo
+    document.recompute()
+    print("Cut: " + name)
+
+    return obj    
 
 
 def createDrawingPage(document, pageName, pathTemplate):

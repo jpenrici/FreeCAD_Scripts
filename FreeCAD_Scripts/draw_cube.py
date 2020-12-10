@@ -4,7 +4,7 @@ import os
 import sys
 
 # Local
-PATH, _ = os.path.split(os.path.realpath(__file__))
+PATH, FILENAME = os.path.split(os.path.realpath(__file__))
 sys.path.append(PATH + "/Tools")
 
 try:

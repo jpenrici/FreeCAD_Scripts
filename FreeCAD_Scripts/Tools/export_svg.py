@@ -28,12 +28,11 @@ def exportSVG(title="CAD", filePath="FreeCAD.svg", svg="<!-- SVG -->"):
         f = open(filePath, "w")
         f.write(output)
         f.close()
+        print("Check " + filePath)
     except Exception as err:
         print("Sorry there was something wrong.")
         print("Error: " + str(err))
-        exit(0)
-
-    print("Check " + filePath)
+        return None  
 
     return output
 
