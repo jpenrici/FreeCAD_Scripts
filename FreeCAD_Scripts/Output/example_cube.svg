@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+    <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+    <svg width="400px" height="400px" viewBox="0 0 400 400"
+        xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <title>example_cube</title>
+    <g id="ViewIso"
+   transform="rotate(0,150,100) translate(150,100) scale(10,10)"
+  >
+<g   stroke="rgb(0, 0, 0)"
+   stroke-width="0.035"
+   stroke-linecap="butt"
+   stroke-linejoin="miter"
+   fill="none"
+   transform="scale(1,-1)"
+  >
+<path id= "1" d=" M -7.07107 -4.08248 L -7.07107 4.08248 " />
+<path id= "2" d=" M 0 8.16497 L -7.07107 4.08248 " />
+<path id= "3" d=" M 7.07107 -4.08248 L -6.34909e-16 -8.16497 " />
+<path id= "4" d=" M 0 -8.16497 L 0 0 " />
+<path id= "5" d=" M 7.07107 4.08248 L -6.34909e-16 0 " />
+<path id= "6" d=" M 7.07107 -4.08248 L 7.07107 4.08248 " />
+<path id= "7" d=" M -7.07107 -4.08248 L 6.34909e-16 -8.16497 " />
+<path id= "8" d=" M 0 8.16497 L 7.07107 4.08248 " />
+<path id= "9" d=" M -7.07107 4.08248 L 6.34909e-16 0 " />
+</g>
+</g>
+
+</svg>
