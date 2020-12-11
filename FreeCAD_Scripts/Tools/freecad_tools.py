@@ -51,6 +51,25 @@ print("Import ok ...")
 
 
 # Métodos
+def build(documentName):
+
+    document = FreeCAD.activeDocument()
+    if document is None:
+        FreeCAD.newDocument(documentName)
+        FreeCAD.setActiveDocument(documentName)
+        document = FreeCAD.activeDocument()
+        print("New Doc: " + document.Name)
+    elif document.Name == documentName:
+        print("Rebuild ...")
+        removeAllObjects(document)
+        print("Clear Doc ...")
+    else:
+        print("There was something wrong.")
+        return None
+
+    return document
+
+
 def removeAllObjects(document):
 
     if len(document.Objects) < 1:
@@ -62,6 +81,40 @@ def removeAllObjects(document):
         document.removeObject(obj.Name)
 
     print("Cleaning finished ... ")
+
+
+def line(document, name, x1, y1, z1, x2, y2, z2):
+
+	obj = document.addObject("Part::Line", name)
+	obj.X1 = x1
+	obj.Y1 = y1
+	obj.Z1 = z1
+	obj.X2 = x2
+	obj.Y2 = y2
+	obj.Z2 = z2
+    document.recompute()
+    print("Line: " + name)
+
+    return obj
+
+
+def lines(document, name, points):
+
+	total = len(points)
+	if total < 2:
+		return 
+
+	group = document.addObject("App::DocumentObjectGroup", name)
+	begin = points[0]
+	for i in range(1, total):
+		end = points[i]
+		obj = line(document, name + "_" + str(i),
+			 begin[0], begin[1], begin[2],
+			 end[0], end[1], end[2])
+		group.addObject(obj)
+		begin = end[:]
+
+	return group
 
 
 def cube(document, name, x, y, z, lengthSide, widthSide, height):

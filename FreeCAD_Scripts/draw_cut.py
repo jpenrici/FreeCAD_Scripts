@@ -13,21 +13,9 @@ except ImportError as err:
     print("Error: " + str(err))
     exit(0)
 
-# SIMPLE CUBE DESIGN
-DOC = FreeCAD.activeDocument()
-DOC_NAME = "example_cut"
+# SIMPLE DESIGN
+DOC = build("example_cut")
 
-if DOC is None:
-    FreeCAD.newDocument(DOC_NAME)
-    FreeCAD.setActiveDocument(DOC_NAME)
-    DOC = FreeCAD.activeDocument()
-    print("New Doc: " + DOC_NAME)
-else:
-    print("Rebuild ...")
-    removeAllObjects(DOC)
-    print("Clear Doc ...")
-
-# Objeto
 # cube(document, name, x, y, z, lengthSide, widthSide, height)
 c1 = cube(DOC, "c1", 0, 0, -2, 10, 20, 10)
 c2 = cube(DOC, "c2", 10, 10, 2, 10, 10, 10)
@@ -40,6 +28,7 @@ f3 = fuse(DOC, "union", f1, f2)
 # cylinder(document, name, x, y, z, centralAngle, radius, height)
 cl = cylinder(DOC, "cl", 5, 5, -2, 180, 5, 15)
 f4 = cut(DOC, "subtract", f3, cl)
+DOC.recompute()
 
 # Salvar FreeCAD
 saveFreeCAD(DOC, "Output")

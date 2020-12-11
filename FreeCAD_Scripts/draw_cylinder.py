@@ -3,7 +3,6 @@
 import os
 import sys
 
-
 # Local
 PATH, FILENAME = os.path.split(os.path.realpath(__file__))
 sys.path.append(PATH + "/Tools")
@@ -15,20 +14,9 @@ except ImportError as err:
     exit(0)
 
 # SIMPLE CUBE DESIGN
-DOC = FreeCAD.activeDocument()
-DOC_NAME = "example_cylinder"
+DOC = build("example_cylinder")
 
-if DOC is None:
-    FreeCAD.newDocument(DOC_NAME)
-    FreeCAD.setActiveDocument(DOC_NAME)
-    DOC = FreeCAD.activeDocument()
-    print("New Doc: " + DOC_NAME)
-else:
-    print("Rebuild ...")
-    removeAllObjects(DOC)
-    print("Clear Doc ...")
-
-# Objetos
+# Grupo para conter os cilindros
 group = DOC.addObject("App::DocumentObjectGroup", "Group_Cylinder")
 
 # cylinder(document, name, x, y, z, centralAngle, radius, height)
@@ -37,7 +25,6 @@ radius = 2.5
 for i in range(1,6):
 	angle = 360 / i
 	group.addObject(cylinder(DOC, "C" + str(angle), 0, i * radius, 0, angle, radius, 5))
-
 DOC.recompute()	
 
 # Salvar FreeCAD
