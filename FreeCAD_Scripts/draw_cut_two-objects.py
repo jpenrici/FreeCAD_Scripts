@@ -14,18 +14,21 @@ except ImportError as err:
     exit(0)
 
 # DESENHO TESTE
-DOC = build("example_cylinder")
+DOC = build("example_cut")
 
-# Grupo para conter os cilindros
-group = DOC.addObject("App::DocumentObjectGroup", "Group_Cylinder")
+# cube(document, name, x, y, z, lengthSide, widthSide, height)
+c1 = cube(DOC, "c1", 0, 0, -2, 10, 20, 10)
+c2 = cube(DOC, "c2", 10, 10, 2, 10, 10, 10)
+c3 = cube(DOC, "c3", 0, 10, -2, 15, 20, 10)
+c4 = cube(DOC, "c4", 10, 0, 2, 15, 10, 10)
+f1 = fuse(DOC, "f1", c1, c3)
+f2 = fuse(DOC, "f2", c2, c4)
+f3 = fuse(DOC, "union", f1, f2)
 
 # cylinder(document, name, x, y, z, centralAngle, radius, height)
-cylinders = []
-radius = 2.5
-for i in range(1,6):
-	angle = 360 / i
-	group.addObject(cylinder(DOC, "C" + str(angle), 0, i * radius, 0, angle, radius, 5))
-DOC.recompute()	
+cl = cylinder(DOC, "cl", 5, 5, -2, 180, 5, 15)
+f4 = cut(DOC, "subtract", f3, cl)
+DOC.recompute()
 
 # Salvar FreeCAD
 saveFreeCAD(DOC, "Output")

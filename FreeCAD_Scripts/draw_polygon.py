@@ -14,17 +14,15 @@ except ImportError as err:
     exit(0)
 
 # DESENHO TESTE
-DOC = build("example_cylinder")
+DOC = build("example_polygon")
+points1 = [(0, 0, 0), (10, 0, 0), (10, 5, 0)]
 
-# Grupo para conter os cilindros
-group = DOC.addObject("App::DocumentObjectGroup", "Group_Cylinder")
+# ponto final redundante
+points2 = [(0, 0, 1), (10, 0, 1), (10, 5, 1), (0, 0, 1)]  
 
-# cylinder(document, name, x, y, z, centralAngle, radius, height)
-cylinders = []
-radius = 2.5
-for i in range(1,6):
-	angle = 360 / i
-	group.addObject(cylinder(DOC, "C" + str(angle), 0, i * radius, 0, angle, radius, 5))
+# polygon(document, name, points)
+polygon(DOC, "Lines", points1) 
+polygon(DOC, "Polygon", points2)
 DOC.recompute()	
 
 # Salvar FreeCAD

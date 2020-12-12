@@ -14,17 +14,11 @@ except ImportError as err:
     exit(0)
 
 # DESENHO TESTE
-DOC = build("example_cylinder")
+DOC = build("example_cone")
 
-# Grupo para conter os cilindros
-group = DOC.addObject("App::DocumentObjectGroup", "Group_Cylinder")
-
-# cylinder(document, name, x, y, z, centralAngle, radius, height)
-cylinders = []
-radius = 2.5
-for i in range(1,6):
-	angle = 360 / i
-	group.addObject(cylinder(DOC, "C" + str(angle), 0, i * radius, 0, angle, radius, 5))
+# cone(document, name, x, y, z, centralAngle, radiusBase, radiusTop, height)
+cone(DOC, "Cone_01", 0, 0, 0, 45, 5.0, 2.5, 2.5)
+cone(DOC, "Cone_02", 0, 10, 0, 360, 5.0, 0.5, 5)
 DOC.recompute()	
 
 # Salvar FreeCAD

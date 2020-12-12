@@ -13,7 +13,7 @@ except ImportError as err:
     print("Error: " + str(err))
     exit(0)
 
-# SIMPLE DESIGN
+# DESENHO TESTE
 DOC = build("example_sphere")
 
 # sphere(document, name, x, y, z, radius)

@@ -14,17 +14,16 @@ except ImportError as err:
     exit(0)
 
 # DESENHO TESTE
-DOC = build("example_cylinder")
-
-# Grupo para conter os cilindros
-group = DOC.addObject("App::DocumentObjectGroup", "Group_Cylinder")
+DOC = build("example_multifuse")
 
 # cylinder(document, name, x, y, z, centralAngle, radius, height)
-cylinders = []
-radius = 2.5
-for i in range(1,6):
-	angle = 360 / i
-	group.addObject(cylinder(DOC, "C" + str(angle), 0, i * radius, 0, angle, radius, 5))
+c1 = cylinder(DOC, "Cylinder", 0, 0, 0, 360, 5, 10)
+
+# cone(document, name, x, y, z, centralAngle, radiusBase, radiusTop, height)
+c2 = cone(DOC, "Cone", 0, 0, 9.8, 360, 5, 1, 10)
+
+# multifuse(document, name, objects)
+multifuse(DOC, "Multifuse", (c1, c2)) 
 DOC.recompute()	
 
 # Salvar FreeCAD

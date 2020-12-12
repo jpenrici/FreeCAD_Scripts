@@ -13,14 +13,14 @@ except ImportError as err:
     print("Error: " + str(err))
     exit(0)
 
-# SIMPLE DESIGN
+# DESENHO TESTE
 DOC = build("example_lines")
 d = 20  # Dimension
 
 # line(document, name, begin, end, color)
 line(DOC, "X", begin=(0, 0, 0), end=(d, 0, 0))
 line(DOC, "Y", begin=(0, 0, 0), end=(0, d, 0))
-line(DOC, "z", begin=(0, 0, 0), end=(0, 0, d))
+line(DOC, "Z", begin=(0, 0, 0), end=(0, 0, d))
 
 x, y, z = 0, 0, 0
 points = []

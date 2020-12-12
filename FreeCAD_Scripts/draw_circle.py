@@ -14,17 +14,18 @@ except ImportError as err:
     exit(0)
 
 # DESENHO TESTE
-DOC = build("example_cylinder")
+DOC = build("example_lines")
+d = 20  # Dimension
 
-# Grupo para conter os cilindros
-group = DOC.addObject("App::DocumentObjectGroup", "Group_Cylinder")
+# ellipse(document, name, x, y, z, majorRadius, minorRadius, startAngle, endAngle)
+ellipse(DOC, "Ellipse", 0, 0, 0, 5, 10, 0, 359)
 
-# cylinder(document, name, x, y, z, centralAngle, radius, height)
-cylinders = []
-radius = 2.5
-for i in range(1,6):
-	angle = 360 / i
-	group.addObject(cylinder(DOC, "C" + str(angle), 0, i * radius, 0, angle, radius, 5))
+# circle(document, name, x, y, z, radius)
+circle(DOC, "Circle", 10, 10, 0, 5)
+
+# arc(document, name, x, y, z, radius, startAngle, endAngle)
+arc(DOC, "Arc", 15, 15, 0, 10, 0, 180)
+
 DOC.recompute()	
 
 # Salvar FreeCAD

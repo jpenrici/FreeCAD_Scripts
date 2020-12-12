@@ -13,18 +13,12 @@ except ImportError as err:
     print("Error: " + str(err))
     exit(0)
 
-# DESENHO TESTE
-DOC = build("example_cylinder")
+# SIMPLE DESIGN
+DOC = build("example_points2shape")
+points1 = [(0, 0, 0), (10, 0, 0), (10, 5, 0)]
 
-# Grupo para conter os cilindros
-group = DOC.addObject("App::DocumentObjectGroup", "Group_Cylinder")
-
-# cylinder(document, name, x, y, z, centralAngle, radius, height)
-cylinders = []
-radius = 2.5
-for i in range(1,6):
-	angle = 360 / i
-	group.addObject(cylinder(DOC, "C" + str(angle), 0, i * radius, 0, angle, radius, 5))
+# points2shape(document, name, points)
+S1 = points2shape(DOC, "Shape1", points1)
 DOC.recompute()	
 
 # Salvar FreeCAD
