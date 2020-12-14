@@ -406,16 +406,19 @@ def points2shape(document, name, points):
     return obj
 
 
-def points2Solid(document, name, points):
+def points2Solid(document, name, points, height):
     """
     :param document: string, FreeCAD.activeDocument()
     :param name: string, reference object 
     :param points: tuple of numbers, coordinate list (x, y, z)
+    :param height: number, extrusion height
     :return Part::Feature
     """
 
-    # TODO
-    pass    
+    obj = points2polygon(document, name, points)
+    extrude(document, name, height)
+
+    return obj
 
 
 def fuse(document, name, objectOne, objectTwo):
