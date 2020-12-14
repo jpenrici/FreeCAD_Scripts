@@ -41,10 +41,10 @@ except ImportError as err:
     exit(0)
 
 try:
-    from export_svg import *
+   from export_svg import *
 except ImportError as err:
-    print("Error: " + str(err))
-    exit(0)
+   print("Error: " + str(err))
+   exit(0)
 
 # Informe inicial
 print("Import ok ...")
@@ -130,7 +130,7 @@ def lines(document, name, points):
     return group
 
 
-def polygon(document, name, points):
+def points2polygon(document, name, points):
     """
     :param document: string, FreeCAD.activeDocument()
     :param name: string, reference object 
@@ -158,6 +158,40 @@ def polygon(document, name, points):
     print("Polygon: " + name)
 
     return obj   
+
+
+def regularPolygon(document, name, x, y, z, sides, radius):
+    """
+    :param document: string, FreeCAD.activeDocument()
+    :param name: string, reference object 
+    :param x: number, coordinate on the X axis
+    :param y: number, coordinate on the Y axis
+    :param z: number, coordinate on the Z axis    
+    :param sides: number of sides
+    :param radius: number
+    :return Part::Polygon
+    """
+
+    if sides < 3:
+        return
+
+    # Pontos na circunferência
+    points = []
+    angle = 0
+    for i in range(0, sides):
+        a = angle * pi / 180.0
+        points += [(radius * sin(a), radius * cos(a), z * 1.0)]
+        angle += 360 // sides
+
+    pl = FreeCAD.Placement()
+    pl.Base = FreeCAD.Vector(x, y, z)
+
+    obj = points2polygon(document, name, points)
+    obj.Placement = pl
+    document.recompute()
+    print("Regular Polygon: " + name)
+
+    return obj
 
 
 def ellipse(document, name, x, y, z, majorRadius, minorRadius, startAngle, endAngle):
@@ -345,7 +379,7 @@ def points2shape(document, name, points):
     :param document: string, FreeCAD.activeDocument()
     :param name: string, reference object 
     :param points: tuple of numbers, coordinate list (x, y, z)
-    :return Part::Feature (Shape)
+    :return Part::Feature
     """
 
     total = len(points)
@@ -370,6 +404,18 @@ def points2shape(document, name, points):
     document.recompute()
 
     return obj
+
+
+def points2Solid(document, name, points):
+    """
+    :param document: string, FreeCAD.activeDocument()
+    :param name: string, reference object 
+    :param points: tuple of numbers, coordinate list (x, y, z)
+    :return Part::Feature
+    """
+
+    # TODO
+    pass    
 
 
 def fuse(document, name, objectOne, objectTwo):
@@ -424,6 +470,22 @@ def cut(document, name, objectOne, objectTwo):
     print("Cut: " + name)
 
     return obj    
+
+
+def extrude(document, shapeName, height):
+    """
+    :param document: string, FreeCAD.activeDocument()
+    :param shapeName: string, reference object
+    :param height: number, extrusion height
+    :return Part::Feature
+    """
+
+    obj = document.getObject(shapeName)
+    face = Part.Face(Part.Wire(obj.Shape.Edges))
+    obj.Shape = face.extrude(FreeCAD.Vector(0, 0, height))
+    document.recompute()
+
+    return obj
 
 
 def createDrawingPage(document, pageName, pathTemplate):

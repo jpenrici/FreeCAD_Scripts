@@ -1,3 +1,4 @@
+
 # -*- Mode: Python; coding: utf-8; indent-tabs-mpythoode: nil; tab-width: 4 -*-
 
 import os
@@ -14,21 +15,18 @@ except ImportError as err:
     exit(0)
 
 # DESENHO TESTE
-DOC = build("example_polygon")
-points1 = [(0, 0, 0), (10, 0, 0), (10, 5, 0)]
-
-# ponto final redundante
-points2 = [(0, 0, 1), (10, 0, 1), (10, 5, 1), (0, 0, 1)]
-
-# points2polygon(document, name, points)
-points2polygon(DOC, "Lines", points1) 
-points2polygon(DOC, "Polygon", points2)
+DOC = build("example_extrusion")
 
 # regularPolygon(document, name, x, y, z, sides, radius)
-regularPolygon(DOC, "Square", 7, 7, 2, 4, 1)
-regularPolygon(DOC, "Pentagon", 9, 7, 2, 5, 1)
-regularPolygon(DOC, "Hexagon", 11, 7, 2, 6, 1)
-regularPolygon(DOC, "Octagon", 14, 7, 2, 8, 2)
+regularPolygon(DOC, "Square", 7, 7, 0, 4, 1)
+regularPolygon(DOC, "Pentagon", 9, 7, 0, 5, 1)
+regularPolygon(DOC, "Hexagon", 11, 7, 0, 6, 1)
+regularPolygon(DOC, "Octagon", 14, 7, 0, 8, 2)
+
+extrude(DOC, "Square", 1)
+extrude(DOC, "Pentagon", 2)
+extrude(DOC, "Hexagon", 3)
+extrude(DOC, "Octagon", 4)
 
 DOC.recompute()	
 
