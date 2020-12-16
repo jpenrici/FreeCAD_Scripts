@@ -24,6 +24,8 @@ FULL_PATH = os.path.realpath(__file__)
 PATH, FILENAME = os.path.split(FULL_PATH)
 FREECADPATH = "/usr/lib/freecad/lib/"
 sys.path.append(FREECADPATH)
+sys.path.append(PATH)
+
 
 # Dependências
 try:
@@ -475,17 +477,19 @@ def cut(document, name, objectOne, objectTwo):
     return obj    
 
 
-def extrude(document, shapeName, height):
+def extrude(document, shapeName, X_direction, Y_direction, Z_direction):
     """
     :param document: string, FreeCAD.activeDocument()
     :param shapeName: string, reference object
-    :param height: number, extrusion height
+    :param X_direction: number
+    :param Y_direction: number
+    :param Z_direction: number
     :return Part::Feature
     """
 
     obj = document.getObject(shapeName)
     face = Part.Face(Part.Wire(obj.Shape.Edges))
-    obj.Shape = face.extrude(FreeCAD.Vector(0, 0, height))
+    obj.Shape = face.extrude(FreeCAD.Vector(X_direction, Y_direction, Z_direction))
     document.recompute()
 
     return obj
@@ -550,3 +554,33 @@ if __name__ == '__main__':
     # Informe
     print(sys.version)
     print(FILENAME + " file methods.")
+    print(80 * '-')
+
+    # Exemplo de Uso
+    DOC = build("example_cube")
+
+    # cube(document, name, x, y, z, lengthSide, widthSide, height)
+    obj_cube = cube(DOC, "cube", 5, 5, 0, 10, 10, 5)
+
+    # View
+    viewIso = DOC.addObject("Drawing::FeatureViewPart", "ViewIso")
+    viewIso.Source = DOC.getObject(obj_cube.Name)
+    viewIso.Direction = (1.0, 1.0, 1.0)
+    viewIso.X = 100.0
+    viewIso.Y = 150.0
+    viewIso.Scale = 10
+    viewIso.ShowHiddenLines = True
+
+    # Página de Desenho
+    pageViewIso = createDrawingPage(DOC, "Cube_Design", PATH + "/../Templates/A4_Landscape.svg")
+    pageViewIso.addObject(viewIso)
+    DOC.recompute()
+
+    # Salvar FreeCAD
+    saveFreeCAD(DOC, PATH + "/../Output")
+
+    # Salvar SVG
+    saveViewSVG(DOC, PATH + "/../Output")
+
+    # Informe final
+    print("Finished!")
