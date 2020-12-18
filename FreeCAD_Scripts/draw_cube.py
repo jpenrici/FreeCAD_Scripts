@@ -29,15 +29,15 @@ viewIso.Scale = 10
 viewIso.ShowHiddenLines = True
 
 # Página de Desenho
-pageViewIso = createDrawingPage(DOC, "Cube_Design", "Templates/A4_Landscape.svg")
+pageViewIso = createDrawingPage(DOC, "Cube_Design", PATH + "/../Templates/A4_Landscape.svg")
 pageViewIso.addObject(viewIso)
 DOC.recompute()
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Salvar SVG
-saveViewSVG(DOC, "Output")
+saveViewSVG(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")

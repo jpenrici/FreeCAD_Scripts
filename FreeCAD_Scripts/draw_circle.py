@@ -29,7 +29,7 @@ arc(DOC, "Arc", 15, 15, 0, 10, 0, 180)
 DOC.recompute()	
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")

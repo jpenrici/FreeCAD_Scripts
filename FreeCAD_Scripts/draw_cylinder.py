@@ -28,7 +28,7 @@ for i in range(1,6):
 DOC.recompute()	
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")

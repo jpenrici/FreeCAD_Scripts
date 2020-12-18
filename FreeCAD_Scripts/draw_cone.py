@@ -22,7 +22,7 @@ cone(DOC, "Cone_02", 0, 10, 0, 360, 5.0, 0.5, 5)
 DOC.recompute()	
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")

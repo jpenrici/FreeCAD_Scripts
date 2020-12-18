@@ -15,14 +15,13 @@ except ImportError as err:
 
 # SIMPLE DESIGN
 DOC = build("example_points2shape")
-points1 = [(0, 0, 0), (10, 0, 0), (10, 5, 0)]
 
 # points2shape(document, name, points)
-S1 = points2shape(DOC, "Shape1", points1)
+S1 = points2shape(DOC, "Shape1", [(0, 1, 0), (10, 1, 0), (10, 5, 0)])
 DOC.recompute()	
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")

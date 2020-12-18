@@ -24,7 +24,7 @@ sphere(DOC, "s4", 30, 30, 10, 10)
 DOC.recompute() 
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")

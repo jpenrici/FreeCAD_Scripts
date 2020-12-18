@@ -31,7 +31,7 @@ f4 = cut(DOC, "subtract", f3, cl)
 DOC.recompute()
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")

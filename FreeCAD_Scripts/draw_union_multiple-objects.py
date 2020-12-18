@@ -17,17 +17,17 @@ except ImportError as err:
 DOC = build("example_multifuse")
 
 # cylinder(document, name, x, y, z, centralAngle, radius, height)
-c1 = cylinder(DOC, "Cylinder", 0, 0, 0, 360, 5, 10)
+c1 = cylinder(DOC, "Cylinder1", 0, 0, 0, 360, 5, 10)
 
 # cone(document, name, x, y, z, centralAngle, radiusBase, radiusTop, height)
-c2 = cone(DOC, "Cone", 0, 0, 9.8, 360, 5, 1, 10)
+c2 = cone(DOC, "Cone1", 0, 0, 9.8, 360, 5, 1, 10)
 
 # multifuse(document, name, objects)
 multifuse(DOC, "Multifuse", (c1, c2)) 
 DOC.recompute()	
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")

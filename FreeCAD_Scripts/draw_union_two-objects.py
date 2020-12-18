@@ -27,7 +27,7 @@ f3 = fuse(DOC, "union", f1, f2)
 DOC.recompute()
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")

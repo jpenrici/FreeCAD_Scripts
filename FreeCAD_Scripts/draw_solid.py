@@ -29,12 +29,12 @@ points = [
 ]
 
 # points2Solid(document, name, points, height)
-points2Solid(DOC, "Solid", points, 2) 
+points2Solid(DOC, "Solid1", points, 2) 
 
 DOC.recompute() 
 
 # Salvar FreeCAD
-saveFreeCAD(DOC, "Output")
+saveFreeCAD(DOC, PATH + "/../Output")
 
 # Informe final
 print("Finished!")
