@@ -171,7 +171,7 @@ def regularPolygon(document, name, x, y, z, sides, width):
     :param y: number, coordinate on the Y axis
     :param z: number, coordinate on the Z axis    
     :param sides: number of sides
-    :param width: side size
+    :param width: number, side size
     :return Part::Polygon
     """
 
@@ -192,7 +192,6 @@ def regularPolygon(document, name, x, y, z, sides, width):
     obj = points2polygon(document, name, points)
     obj.Placement = pl
     document.recompute()
-    print("Regular Polygon " + obj.Name + ": " + str(obj.Placement))
 
     return obj
 
@@ -422,7 +421,26 @@ def points2Solid(document, name, points, height):
     obj = points2polygon(document, name, points)
     # extrude(document, shapeName, X_direction, Y_direction, Z_direction)
     extrude(document, name, 0, 0, height)
-    print("Solid " + obj.Name + ": " + str(obj.Placement))
+
+    return obj
+
+
+def regularPolygon2Solid(document, name, x, y, z, sides, width, height):
+    """
+    :param document: string, FreeCAD.activeDocument()
+    :param name: string, reference object
+    :param x: number, coordinate on the X axis
+    :param y: number, coordinate on the Y axis
+    :param z: number, coordinate on the Z axis    
+    :param sides: number of sides
+    :param width: number, side size    
+    :param height: number, extrusion height
+    :return Part::Feature
+    """
+
+    obj = regularPolygon(document, name, x, y, z, sides, width)
+    # extrude(document, shapeName, X_direction, Y_direction, Z_direction)
+    extrude(document, name, 0, 0, height)
 
     return obj
 
@@ -492,19 +510,17 @@ def extrude(document, shapeName, X_direction, Y_direction, Z_direction):
     """
 
     obj = document.getObject(shapeName)
-    print(obj.Name + ": " + str(obj.Placement))
-
     face = Part.Face(Part.Wire(obj.Shape.Edges))
     obj.Shape = face.extrude(FreeCAD.Vector(X_direction, Y_direction, Z_direction))
     document.recompute()
-
     print("Extrude " + obj.Name + ": " + str(obj.Placement))
 
     return obj
 
 
-def rotate(document, shapeName, yaw, pitch, roll):
+def rotate_euler(document, shapeName, yaw, pitch, roll):
     """
+    Euler rotation
     :param document: string, FreeCAD.activeDocument()
     :param shapeName: string, reference object
     :param yaw: number, Euler angle, rotation about the Z axis
@@ -514,8 +530,6 @@ def rotate(document, shapeName, yaw, pitch, roll):
     """
 
     obj = document.getObject(shapeName)
-    print(obj.Name + ": " + str(obj.Placement))
-
     pos = obj.Placement.Base
     centre = FreeCAD.Vector(0, 0, 0)
     rot = FreeCAD.Rotation(yaw, pitch, roll)
@@ -523,7 +537,29 @@ def rotate(document, shapeName, yaw, pitch, roll):
     obj.Placement = pl
     document.recompute()
 
-    print("Rotate" + obj.Name + ": " + str(obj.Placement))
+    print("Rotate " + obj.Name + ": " + str(obj.Placement))
+
+
+def rotate(document, shapeName, angle, axis):
+    """
+    :param document: string, FreeCAD.activeDocument()
+    :param shapeName: string, reference object
+    :param angle: number
+    :param axis: string, axis of rotation 
+    :return Part::Feature
+    """
+
+    axis = axis.upper()
+
+    obj = document.getObject(shapeName)
+    pos = obj.Placement.Base
+    centre = FreeCAD.Vector(0, 0, 0)
+    rot = FreeCAD.Rotation(FreeCAD.Vector(axis == "X", axis == "Y", axis == "Z"), angle)
+    pl = FreeCAD.Placement(pos, rot, centre)
+    obj.Placement = pl
+    document.recompute()
+
+    print("Rotate " + obj.Name + ": " + str(obj.Placement)) 
 
 
 def move(document, shapeName, x, y, z):
@@ -537,8 +573,6 @@ def move(document, shapeName, x, y, z):
     """
 
     obj = document.getObject(shapeName)
-    print(obj.Name + ": " + str(obj.Placement))
-
     vector = FreeCAD.Vector(x, y, z)
     Draft.move(obj, vector)
     document.recompute()
