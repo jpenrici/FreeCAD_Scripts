@@ -87,7 +87,7 @@ def createTree(document, treeName, stem, branches):
     tree = document.addObject("App::DocumentObjectGroup", id(treeName))
     leafs = document.addObject("App::DocumentObjectGroup", id(treeName, leafsName))
     trunk = branch(document, id(treeName, branchName), x, y, z, stem)
-    roof = [trunk]  # tronco (ramo principal, vertical e sem folhas)
+    ramifications = [trunk]  # tronco (ramo principal, vertical e sem folhas)
     
     top = 2 * stem/3.0
     for i in range(1, branches):
@@ -102,17 +102,17 @@ def createTree(document, treeName, stem, branches):
         newBranch = branch(document, idBranch, x, y, z, width)
         rotate_euler(document, idBranch, 0, pitch, roll)
         move(document, idBranch, x + thickness / 2, y, fork)
-        roof += [newBranch]
+        ramifications += [newBranch]
         # Folhas
         newLeaf = leafArea(document, idLeaf, x, y, z, 1.5)
         boundBox = newBranch.Shape.BoundBox
         move(document, idLeaf, boundBox.XMax, boundBox.YMin, boundBox.ZMax)
         leafs.addObject(newLeaf)
 
-    if len(roof) > 1:
-        union = multifuse(document, id(treeName, trunkName), roof)
+    if len(ramifications) > 1:
+        union = multifuse(document, id(treeName, trunkName), ramifications)
     else:
-        union = roof[-1]
+        union = ramifications[-1]
 
     tree.addObject(leafs)
     tree.addObject(union)
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     DOC.recompute() 
 
     # Salvar FreeCAD
-    # saveFreeCAD(DOC, PATH + "/../Output")
+    saveFreeCAD(DOC, PATH + "/../Output")
 
     # Informe final
     print("Finished!")
