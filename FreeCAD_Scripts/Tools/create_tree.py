@@ -6,14 +6,14 @@
 
 import os
 import sys
-from random import randint
+from random import randint, choice
 
 try:
-    sys.path.append(os.path.split(os.path.realpath(__file__))[0])
-    from freecad_tools import *
+	sys.path.append(os.path.split(os.path.realpath(__file__))[0])
+	from freecad_tools import *
 except ImportError as err:
-    print("Error: " + str(err))
-    exit(0)
+	print("Error: " + str(err))
+	exit(0)
 
 # Informe inicial
 print("create_tree module running ...")
@@ -24,117 +24,157 @@ polygon = 6         # número de lados do tronco/ramo
 thickness = 0.2     # espessura do ramo
 
 # Rótulos
-trunkName = "Trunk"
-branchName = "Branch"
-leafName = "Leaf"
-leafsName = "Leafs"
+stemName = "_Stem"
+trunkName = "_Trunk"
+branchName = "_Branch"
+leafName = "_Leaf"
+leafsName = "_Leafs"
 
 
 def id(firstName, lastName=""):
 
-    global index
-    index = index + 1
+	global index
+	index = index + 1
 
-    if lastName == "":
-        return firstName + "_" + str(index)
+	if lastName == "":
+		return firstName + "_" + str(index)
 
-    return firstName + "_" + lastName + "_" + str(index)
+	return firstName + lastName + "_" + str(index)
+
+
+def leaf(document, name, x, y, z, width):
+	"""
+	:param document: string, FreeCAD.activeDocument()
+	:param name: string, reference object 
+	:param x: number, coordinate on the X axis
+	:param y: number, coordinate on the Y axis
+	:param z: number, coordinate on the Z axis
+	:param width: number, leaf length
+	:return Part::Polygon (Solid)
+	"""
+
+	density = 0.05
+	a = width * 1/4.0
+	b = width * 3/4.0
+	c = width * 1/8.0
+	d = width * 3/8.0
+	p = [ (x, y, z), (x + a, y + a, z), (x + b, y, z), (x + a, y - a, z),
+		  (x, y, z), (x + c, y - d, z), (x, y - b, z), (x - c, y - d, z),
+		  (x, y, z), (x - c, y + d, z), (x, y + b, z), (x + c, y + d, z) ]
+
+	obj = points2polygon(document, name, p)
+	extrude(document, name, 0, 0, density)
+
+	return obj
 
 
 def leafArea(document, name, x, y, z, radius):
-    """
-    Sphere that simulates filling with leaves.
-    :param document: string, FreeCAD.activeDocument()
-    :param name: string, reference object
-    :param x: number, coordinate on the X axis
-    :param y: number, coordinate on the Y axis
-    :param z: number, coordinate on the Z axis
-    :param radius: number
-    :return Part::Sphere
-    """
-    
-    return sphere(document, name, x, y, z, radius)
+	"""
+	Sphere that simulates filling with leaves.
+	:param document: string, FreeCAD.activeDocument()
+	:param name: string, reference object
+	:param x: number, coordinate on the X axis
+	:param y: number, coordinate on the Y axis
+	:param z: number, coordinate on the Z axis
+	:param radius: number
+	:return Part::Sphere
+	"""
+	
+	return sphere(document, name, x, y, z, radius)
 
 
 def branch(document, name, x, y, z, length):
-    """
-    :param document: string, FreeCAD.activeDocument()
-    :param name: string, reference object
-    :param x: number, coordinate on the X axis
-    :param y: number, coordinate on the Y axis
-    :param z: number, coordinate on the Z axis
-    :param length: number, branch length
-    :return Part::Feature (Solid)
-    """
+	"""
+	:param document: string, FreeCAD.activeDocument()
+	:param name: string, reference object
+	:param x: number, coordinate on the X axis
+	:param y: number, coordinate on the Y axis
+	:param z: number, coordinate on the Z axis
+	:param length: number, branch length
+	:return Part::Feature (Solid)
+	"""
 
-    return regularPolygon2Solid(document, name, x, y, z, polygon, thickness, length)
+	return regularPolygon2Solid(document, name, x, y, z, polygon, thickness, length)
 
 
 def createTree(document, treeName, stem, branches):
-    """
-    :param document: string, FreeCAD.activeDocument()
-    :param name: string, reference object
-    :param x: number, coordinate on the X axis
-    :param y: number, coordinate on the Y axis
-    :param z: number, coordinate on the Z axis
-    :param stem: number, stem size
-    :param branches: number, number of branches
-    :return Polygon (Solid) in App::DocumentObjectGroup
-    """
+	"""
+	:param document: string, FreeCAD.activeDocument()
+	:param name: string, reference object
+	:param x: number, coordinate on the X axis
+	:param y: number, coordinate on the Y axis
+	:param z: number, coordinate on the Z axis
+	:param stem: number, stem size
+	:param branches: number, number of branches
+	:return Polygon (Solid) in App::DocumentObjectGroup
+	"""
 
-    # Árvore (tronco, ramificações e folhas)
-    x, y, z = (0, 0, 0)
-    tree = document.addObject("App::DocumentObjectGroup", id(treeName))
-    leafs = document.addObject("App::DocumentObjectGroup", id(treeName, leafsName))
-    trunk = branch(document, id(treeName, branchName), x, y, z, stem)
-    ramifications = [trunk]  # tronco (ramo principal, vertical e sem folhas)
-    
-    top = 2 * stem/3.0
-    for i in range(1, branches):
-        # Detalhes
-        idBranch = id(treeName, branchName)
-        idLeaf = id(treeName, leafName)
-        fork = randint(int(top), stem)     # posição da bifurcação
-        width = stem / randint(2, 5)       # tamanho do ramo
-        pitch = randint(10, 85)            # giro entorno do eixo Y
-        roll = randint(10, 85)             # giro entorno do eixo X
-        # Ramo
-        newBranch = branch(document, idBranch, x, y, z, width)
-        rotate_euler(document, idBranch, 0, pitch, roll)
-        move(document, idBranch, x + thickness / 2, y, fork)
-        ramifications += [newBranch]
-        # Folhas
-        newLeaf = leafArea(document, idLeaf, x, y, z, 1.5)
-        boundBox = newBranch.Shape.BoundBox
-        move(document, idLeaf, boundBox.XMax, boundBox.YMin, boundBox.ZMax)
-        leafs.addObject(newLeaf)
+	# Árvore (tronco, ramificações e folhas)
+	tree = document.addObject("App::DocumentObjectGroup", treeName)
+	leafs = document.addObject("App::DocumentObjectGroup", treeName + leafsName)
+	ramifications = document.addObject("App::DocumentObjectGroup", treeName + branchName)
 
-    if len(ramifications) > 1:
-        union = multifuse(document, id(treeName, trunkName), ramifications)
-    else:
-        union = ramifications[-1]
+	top = stem * 1/3
+	x, y, z = (0, 0, 0)
+	trunk = branch(document, treeName + stemName, x, y, z, stem)
+	ramifications.addObject(branch(document, id(treeName, branchName), x, y, z + top, top))
+	
+	angles_Z = [ 50, 60, 75]
+	angles_Y = [-75, -60, -45, -30, 15, 30, 45, 60, 75]
+	angles_X = [-85, -70, -60, -45, -30, -15, 15, 30, 45, 50, 60, 70, 75, 85]
 
-    tree.addObject(leafs)
-    tree.addObject(union)
+	box_X = [0, 0]
+	box_Y = [0, 0]
+	box_Z = [0, 0]
 
-    return tree
+	# Ramos
+	for i in range(1, branches):
+		idBranch = id(treeName, branchName)
+		newBranch = branch(document, idBranch, x, y, z, stem / randint(2, 5))
+		rotate_euler(document, idBranch, 0, choice(angles_Y), choice(angles_X))
+		move(document, idBranch, x + thickness / 2, y, z + stem - top)
+		ramifications.addObject(newBranch)
+
+		boundBox = newBranch.Shape.BoundBox
+		if box_X[0] > boundBox.XMin: box_X[0] = int(boundBox.XMin)
+		if box_X[1] < boundBox.XMax: box_X[1] = int(boundBox.XMax)
+		if box_Y[0] > boundBox.YMin: box_Y[0] = int(boundBox.YMin)
+		if box_Y[1] < boundBox.YMax: box_Y[1] = int(boundBox.YMax) 
+		if box_Z[0] > boundBox.ZMin: box_Z[0] = int(boundBox.ZMin)
+		if box_Z[1] < boundBox.ZMax: box_Z[1] = int(boundBox.ZMax)                                   
+
+	# Folhas
+	for j in range(0, 10 * branches):
+		idLeaf = id(treeName, leafName)
+		newLeaf = leafArea(document, idLeaf, x, y, z, 1.2)
+		#newLeaf = leaf(document, idLeaf, x, y, z, 1.8)
+		rotate_euler(document, idLeaf, choice(angles_Z), choice(angles_Y), choice(angles_X))
+		move(document, idLeaf, x + randint(box_X[0], box_X[1]),	y + randint(box_Y[0], box_Y[1]),
+			top + randint(box_Z[1] / 2, box_Z[1]))
+		leafs.addObject(newLeaf)
+
+	tree.addObject(leafs)
+	tree.addObject(ramifications)
+	tree.addObject(trunk)
+
+	return tree
 
 
 if __name__ == '__main__':
-    # Informe
-    print("PATH: " + PATH)
-    print(80 * '-')
+	# Informe
+	print("PATH: " + PATH)
+	print(80 * '-')
 
-    # Exemplo de Uso
-    DOC = build("simple_tree")
+	# Exemplo de Uso
+	DOC = build("simple_tree")
 
-    # tree(document, treeName, stem, branches)
-    tree_1 = createTree(DOC, "Tree01", 10, 10)
+	# tree(document, treeName, stem, branches)
+	tree_1 = createTree(DOC, "Tree01", 10, 15)
 
-    DOC.recompute() 
+	DOC.recompute() 
 
-    # Salvar FreeCAD
-    saveFreeCAD(DOC, PATH + "/../Output")
+	# Salvar FreeCAD
+	saveFreeCAD(DOC, PATH + "/../Output")
 
-    # Informe final
-    print("Finished!")
+	# Informe final
+	print("Finished!")
